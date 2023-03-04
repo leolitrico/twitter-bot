@@ -1,5 +1,6 @@
 import sys
-sys.path.append("../")
+import pathlib
+sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
 import datetime
 from libs.twitter import login, get_followers, get_follow_count, follow, unfollow
