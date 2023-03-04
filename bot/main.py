@@ -6,29 +6,63 @@ from libs.twitter import login, get_followers, get_follow_count, follow, unfollo
 from bot.data import store_data, contains, remove_before, load_data
 from libs.browser import get_browser
 
-BOT_USERNAME = ""
-BOT_PASSWORD = ""
+##############################################################################################
+# constants
+##############################################################################################
+PROFILE_OPT = "--profile"
 
-TARGET_USERNAME = ""
-TARGET_PASSWORD = ""
+FOLLOWER_LIMIT_OPT = "--follower-limit"
+FOLLOWER_LIMIT = 30
 
-BROWSER_PROFILE_PATH = "/home/leo/.config/google-chrome"
+RATIO_LIMIT_OPT = "--ratio-limit"
+RATIO_LIMIT = 3
 
-BROWSER_PROFILE_NAME_BOT = "Profile 1"
-BROWSER_PROFILE_NAME_MY = ""
+FOLLOW_AMOUNT_OPT = "--follow-amount"
+FOLLOW_AMOUNT = 10
 
-FOLLOWING_LIMIT = 30
-FOLLOW_RATIO_LOWER_BOUND = 3
-FOLLOW_AT_A_TIME = 10
+##############################################################################################
+# parse arguments
+##############################################################################################
+
+argv = sys.argv[1:]
+
+botUsername = argv[0]
+botPassword = argv[1]
+
+targetUsername = argv[2]
+targetPassword = argv[3]
+
+profile_path = None
+botProfile = None
+targetProfile = None
+if PROFILE_OPT in argv:
+    i = argv.index(PROFILE_OPT)
+    profile_path = argv[i + 1]
+    botProfile = argv[i + 2]
+    targetProfile = argv[i + 3]
+
+followerLimit = FOLLOWER_LIMIT
+if FOLLOWER_LIMIT_OPT in argv:
+    i = argv.index(FOLLOWER_LIMIT_OPT)
+    followerLimit = int(argv[i + 1])
+
+ratioLimit = RATIO_LIMIT
+if RATIO_LIMIT_OPT in argv:
+    i = argv.index(RATIO_LIMIT_OPT)
+    ratioLimit = int(argv[i + 1])
+
+followAmount = FOLLOW_AMOUNT
+if FOLLOW_AMOUNT_OPT in argv:
+    i = argv.index(FOLLOW_AMOUNT_OPT)
+    followAmount = int(argv[i + 1])
 
 
 ##############################################################################################
 # functions
 ##############################################################################################
-
 def users_to_follow(browser, data):
     #get all my followers
-    myFollowers = get_followers(browser, TARGET_USERNAME, 1000)
+    myFollowers = get_followers(browser, targetUsername, 1000)
 
     #init list of new people to follow
     usersToFollow = []
@@ -40,21 +74,20 @@ def users_to_follow(browser, data):
             #if they are not already in my followers, and they have a small amount of followers, add to list
             if not contains(data, f):
                 following, followers = get_follow_count(browser, f)
-                if following / followers > FOLLOW_RATIO_LOWER_BOUND and followers < FOLLOWING_LIMIT:
+                if following / followers > ratioLimit and followers < followerLimit:
                     usersToFollow.append(f)
                     data.append((f, datetime.datetime.now()))
-                    if len(usersToFollow) > FOLLOW_AT_A_TIME:
+                    if len(usersToFollow) > followAmount:
                         return usersToFollow
     return usersToFollow
 
 ##############################################################################################
-# main
+# retrieve data
 ##############################################################################################
-bot_browser = get_browser(BROWSER_PROFILE_PATH, BROWSER_PROFILE_NAME_BOT)
-my_browser = get_browser(BROWSER_PROFILE_PATH, BROWSER_PROFILE_NAME_MY)
+botBrowser = get_browser(profile_path, botProfile)
 
 #login to bot account
-bot_browser.login(BOT_USERNAME, BOT_PASSWORD)
+login(botBrowser, botUsername, botPassword)
 
 #list of pairs (username, time when followed)
 data = load_data()
@@ -63,15 +96,29 @@ data = load_data()
 usersToUnFollow = remove_before(data, datetime.datetime.now() - datetime.timedelta(days=7))
 
 #get the list of users to follow
-usersToFollow = users_to_follow(bot_browser, data)
+usersToFollow = users_to_follow(botBrowser, data)
+
+#close the bot browser
+botBrowser.close()
+
+#store the data
+store_data(data)
+
+
+##############################################################################################
+# follow/unfollow
+##############################################################################################
+targetBrowser = get_browser(profile_path, targetProfile)
 
 #follow each user
 for user in usersToFollow:
-    follow(my_browser, user)
+    follow(targetBrowser, user)
 
+#unfollow each user
 for user in usersToUnFollow:
-    unfollow(my_browser, user)
+    unfollow(targetBrowser, user)
 
-store_data(data)
+#close the target browser
+targetBrowser.close()
 
 

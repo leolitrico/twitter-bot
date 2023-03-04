@@ -1,7 +1,11 @@
-
-
-from libs.random_sleep import random_sleep
 from selenium.webdriver.common.by import By
+
+from time import sleep
+import random
+
+RANGE = 3
+def random_sleep(min):
+    sleep(random.randint(min, min + RANGE))
 
 
 def login(browser, username, password):
