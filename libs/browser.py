@@ -1,3 +1,4 @@
+from time import sleep
 from selenium import webdriver
 
 DRIVER_PATH = '/usr/bin/chromedriver'
@@ -13,4 +14,5 @@ def get_browser(profile_path=None, profile_name=None):
         options.add_argument('--profile-directory=' + profile_name)
 
     browser = webdriver.Chrome(options = options, executable_path = DRIVER_PATH)
+    sleep(3)
     return browser

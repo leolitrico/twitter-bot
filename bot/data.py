@@ -1,6 +1,8 @@
 import datetime
+import pathlib
+
 FORMAT = "%Y-%m-%d"
-FILENAME = "./data.csv"
+FILENAME = str(pathlib.Path(__file__).parent.absolute()) + "/data.csv"
 
 def load_data():
     output = [] 

@@ -1,11 +1,13 @@
 import sys
 import pathlib
+import datetime
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
-import datetime
+
 from libs.twitter import login, get_followers, get_follow_count, follow, unfollow
 from bot.data import store_data, contains, remove_before, load_data
 from libs.browser import get_browser
+
 
 ##############################################################################################
 # constants
@@ -63,17 +65,17 @@ if FOLLOW_AMOUNT_OPT in argv:
 ##############################################################################################
 def users_to_follow(browser, data):
     #get all my followers
-    myFollowers = get_followers(browser, targetUsername, 1000)
+    targetFollowers = get_followers(browser, targetUsername, 1000)
 
     #init list of new people to follow
     usersToFollow = []
 
-    #for each of my followers, get their followers
-    for follower in myFollowers:
+    #for each of target's followers, get their followers
+    for follower in targetFollowers:
         theirFollowers = get_followers(browser, follower, 1000)
         for f in theirFollowers:
             #if they are not already in my followers, and they have a small amount of followers, add to list
-            if not contains(data, f):
+            if not contains(data, f) and f != targetUsername and f != botUsername:
                 following, followers = get_follow_count(browser, f)
                 if following / followers > ratioLimit and followers < followerLimit:
                     usersToFollow.append(f)
@@ -110,6 +112,9 @@ store_data(data)
 # follow/unfollow
 ##############################################################################################
 targetBrowser = get_browser(profile_path, targetProfile)
+
+#login to target account
+login(targetBrowser, targetUsername, targetPassword)
 
 #follow each user
 for user in usersToFollow:
