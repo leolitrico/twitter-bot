@@ -1,13 +1,13 @@
 # Description: This script will find users that are likely to follow a target user back
 # Arguments:
-    # botUsername: username of the bot account
-    # botPassword: password of the bot account
-    # targetUsername: username of the target account
+# botUsername: username of the bot account
+# botPassword: password of the bot account
+# targetUsername: username of the target account
 # Options:
-    # --profile: use a chrome profile for the bot (--profile path profileName)
-    # --follower-limit: max number of followers an eligible user can have to follow them
-    # --ratio-limit: limit the ratio of followers to following an eligible user can have to follow them
-    # --file: file to store the users in
+# --profile: use a chrome profile for the bot (--profile path profileName)
+# --follower-limit: max number of followers an eligible user can have to follow them
+# --ratio-limit: limit the ratio of followers to following an eligible user can have to follow them
+# --file: file to store the users in
 
 
 import sys
@@ -111,4 +111,5 @@ def main():
                     file.write(f + "\n")
     file.close()
 
-
+if __name__ == "__main__":
+    main()
