@@ -23,10 +23,10 @@ from libs.browser import get_browser
 PROFILE_OPT = "--profile"
 
 FOLLOWER_LIMIT_OPT = "--follower-limit"
-FOLLOWER_LIMIT = 30
+FOLLOWER_LIMIT = 60
 
 RATIO_LIMIT_OPT = "--ratio-limit"
-RATIO_LIMIT = 3
+RATIO_LIMIT = 2
 
 FILE_OPT = "--file"
 
