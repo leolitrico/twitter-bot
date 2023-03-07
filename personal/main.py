@@ -5,6 +5,7 @@
     # followNumber: number of users to follow
     # followFilename: file to read users from
     # followedFilename: file to store users that were followed by this script and date followed (user, date) format
+    # wereFollowedFilename: file to store users that were followed at any point in time
 
 # Options:
     # --profile: use a chrome profile (--profile path profileName)
@@ -20,7 +21,7 @@ from libs.browser import get_browser
 ##############################################################################################
 # constants
 ##############################################################################################
-NUMBER_TRIES = 100
+NUMBER_TRIES = 5
 DATE_FORMAT = "%Y-%m-%d"
 
 ##############################################################################################
@@ -82,6 +83,7 @@ def main():
     followNumber = int(argv[2])
     followFilename = argv[3]
     followedFilename = argv[4]
+    wereFollowedFilename = argv[5]
 
     ##############################################################################################
     # main
@@ -100,6 +102,14 @@ def main():
     # get users to unfollow, and users that were followed by this script
     usersToUnfollow, usersFollowed = get_users_to_unfollow(followedFilename)
 
+    #open were followed file in append only mode
+    wereFollowed = None
+    try:
+        wereFollowed = open(wereFollowedFilename, 'a')
+    except:
+        print("error opening were followed file")
+        return
+
     # follow users
     i = 0
     for user in usersToFollow:
@@ -108,8 +118,11 @@ def main():
 
         if user not in following:
             follow(browser, user, numberTries=NUMBER_TRIES)
+            wereFollowed.write(user + '\n')
             usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
             i += 1
+            
+    wereFollowed.close()
 
     # store users to follow
     store_users_to_follow(followFilename, usersToFollow[i:])

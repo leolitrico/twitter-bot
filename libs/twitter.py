@@ -28,6 +28,7 @@ def login(browser, username, password, numberOfTries=1):
             #Enter Your Password here
             browser.find_element(By.XPATH,"//input[@name='password']").send_keys(password)
             browser.find_element(By.XPATH,"/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div").click()
+            random_sleep(4)
         except:
             continue
 
@@ -50,7 +51,6 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                     username = username.text
                     if username not in follower_list and len(username) > 0 and username[0] == '@':
                         follower_list.append(username[1:])
-                        print(username[1:])
                         counter += 1
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -85,7 +85,6 @@ def get_following(browser, name, limit=None, numberOfTries=1):
                     username = username.text
                     if username not in follower_list and len(username) > 0 and username[0] == '@':
                         follower_list.append(username[1:])
-                        print(username[1:])
                         counter += 1
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
