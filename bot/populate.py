@@ -110,14 +110,19 @@ def main():
     if wereFollowedUsers == None:
         return
     
+    print("getting browser...")
     botBrowser = get_browser(profile_path, botProfile)
 
     #login to bot account
+    print("logging in...")
     login(botBrowser, botUsername, botPassword)
 
     #get all my followers
+    print("hey")
     targetFollowers = get_followers(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
     targetFollowing = get_following(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
+    print("bye")
+
     #init list of new people to follow
     usersToFollow = []
 
