@@ -59,10 +59,10 @@ def get_users_to_unfollow(filename):
                     usersToUnfollow.append(line[0])
                 else:
                     usersToKeep.append((line[0], line[1]))
-            return usersToUnfollow
+            return usersToUnfollow, usersToKeep
     except:
         print("unable to get users to unfollow")
-        return []
+        return [], []
     
 def store_users_followed(filename, usersToUnfollow):
     try:
@@ -118,10 +118,10 @@ def main():
                 break
 
             if user not in following:
-                follow(browser, user, numberTries=NUMBER_TRIES)
-                wereFollowed.write(user + '\n')
-                usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
-                i += 1
+                if(follow(browser, user, numberOfTries=NUMBER_TRIES)):
+                    wereFollowed.write(user + '\n')
+                    usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
+                    i += 1
     finally:
         wereFollowed.close()
 
@@ -132,7 +132,7 @@ def main():
     # unfollow users
     for user in usersToUnfollow:
         if user not in following:
-            unfollow(browser, user[0], numberTries=NUMBER_TRIES)
+            unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
 
 if __name__ == "__main__":
     main()

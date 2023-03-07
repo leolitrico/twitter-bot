@@ -126,10 +126,18 @@ def follow(browser, name, numberOfTries=1):
             browser.get("https://twitter.com/" + name)
             random_sleep(4)
             #get follow button element
-            follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div/div[1]/div[2]/div[3]/div[1]/div")
+            follow_button = None
+            try: 
+                follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div/div[1]/div[2]/div[2]/div[1]/div")
+            except:
+                follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div/div[1]/div[2]/div[3]/div[1]/div")
+
             follow_button.click()
+            sleep(1)
+            return True
         except:
             continue
+    return False
 
 def unfollow(browser, name, numberOfTries=1):
     for i in range(numberOfTries):
@@ -137,7 +145,14 @@ def unfollow(browser, name, numberOfTries=1):
             browser.get("https://twitter.com/" + name)
             random_sleep(4)
             #get follow button element
-            follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div[1]/div[1]/div[2]/div[4]/div[1]/div")
+            follow_button = None
+            try:
+                follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div[1]/div[1]/div[2]/div[4]/div[1]/div")
+            except:
+                follow_button = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div[1]/div[1]/div[2]/div[4]/div[1]/div")
             follow_button.click()
+            sleep(1)
+            return True
         except:
             continue
+    return False
