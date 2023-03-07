@@ -103,6 +103,9 @@ def main():
     # main
     ##############################################################################################
     #load the users that were followed at any point in time
+    print("###############################################")
+    print("username:" + targetUsername)
+    print("setting up...")
     wereFollowedUsers = load_were_followed_users(wereFollowed)
     if wereFollowedUsers == None:
         return
@@ -131,16 +134,23 @@ def main():
 
     
     #for each of target's followers, get their followers
+    print("populating...")
     try:
         for follower in targetFollowers:
-            theirFollowers = get_followers(botBrowser, follower, limit=1000, numberOfTries=NUMBER_TRIES)
+            theirFollowers = get_followers(botBrowser, follower, limit=10000, numberOfTries=NUMBER_TRIES)
             for f in theirFollowers:
                 #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip
                 if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
                     file.write(f + "\n")
                     usersToFollow.append(f)
+        print("successful")
+    except:
+        print("Error occured while populating")
     finally:
         file.close()
 
+
+
 if __name__ == "__main__":
     main()
+    print("###############################################")
