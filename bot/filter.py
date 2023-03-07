@@ -126,7 +126,7 @@ def main():
 
     i = -1
     try: 
-        for i, follower in enumerate(followers):
+        for follower in followers:
             i += 1
             following_count, follow_count = get_follow_count(botBrowser, follower, numberOfTries=NUMBER_TRIES)
             ratio = 100
@@ -135,13 +135,20 @@ def main():
 
             if following_count < followerLimit or ratio > ratioLimit:
                 file.write(follower + "\n")
+                print(follower)
                 n -= 1
                 if n == 0:
                     file.close()
-                    store_users_to_follow(followersFilename, followers[i + 1:])
+                    if i + 1 < len(followers):
+                        store_users_to_follow(followersFilename, followers[i + 1:])
+                    else:
+                        store_users_to_follow(followersFilename, [])
                     return
     finally: 
-        store_users_to_follow(followersFilename, followers[i + 1:])
+        if i + 1 < len(followers) and i >= 0:
+            store_users_to_follow(followersFilename, followers[i + 1:])
+        else:
+            store_users_to_follow(followersFilename, [])
         file.close()
 
 if __name__ == "__main__":

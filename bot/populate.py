@@ -103,25 +103,18 @@ def main():
     # main
     ##############################################################################################
     #load the users that were followed at any point in time
-    print("###############################################")
-    print("username:" + targetUsername)
-    print("setting up...")
     wereFollowedUsers = load_were_followed_users(wereFollowed)
     if wereFollowedUsers == None:
         return
     
-    print("getting browser...")
     botBrowser = get_browser(profile_path, botProfile)
 
     #login to bot account
-    print("logging in...")
     login(botBrowser, botUsername, botPassword)
 
     #get all my followers
-    print("hey")
     targetFollowers = get_followers(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
     targetFollowing = get_following(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
-    print("bye")
 
     #init list of new people to follow
     usersToFollow = []
@@ -139,7 +132,6 @@ def main():
 
     
     #for each of target's followers, get their followers
-    print("populating...")
     try:
         for follower in targetFollowers:
             theirFollowers = get_followers(botBrowser, follower, limit=10000, numberOfTries=NUMBER_TRIES)
@@ -148,9 +140,6 @@ def main():
                 if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
                     file.write(f + "\n")
                     usersToFollow.append(f)
-        print("successful")
-    except:
-        print("Error occured while populating")
     finally:
         file.close()
 
@@ -158,4 +147,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    print("###############################################")
