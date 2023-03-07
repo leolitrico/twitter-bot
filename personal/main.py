@@ -110,19 +110,20 @@ def main():
         print("error opening were followed file")
         return
 
-    # follow users
-    i = 0
-    for user in usersToFollow:
-        if i >= followNumber:
-            break
+    try: 
+        # follow users
+        i = 0
+        for user in usersToFollow:
+            if i >= followNumber:
+                break
 
-        if user not in following:
-            follow(browser, user, numberTries=NUMBER_TRIES)
-            wereFollowed.write(user + '\n')
-            usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
-            i += 1
-            
-    wereFollowed.close()
+            if user not in following:
+                follow(browser, user, numberTries=NUMBER_TRIES)
+                wereFollowed.write(user + '\n')
+                usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
+                i += 1
+    finally:
+        wereFollowed.close()
 
     # store users to follow
     store_users_to_follow(followFilename, usersToFollow[i:])

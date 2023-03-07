@@ -129,15 +129,18 @@ def main():
             print("Error: unable to write to file " + filename)
             return
 
+    
     #for each of target's followers, get their followers
-    for follower in targetFollowers:
-        theirFollowers = get_followers(botBrowser, follower, limit=1000, numberOfTries=NUMBER_TRIES)
-        for f in theirFollowers:
-            #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip
-            if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
-                file.write(f + "\n")
-                usersToFollow.append(f)
-    file.close()
+    try:
+        for follower in targetFollowers:
+            theirFollowers = get_followers(botBrowser, follower, limit=1000, numberOfTries=NUMBER_TRIES)
+            for f in theirFollowers:
+                #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip
+                if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
+                    file.write(f + "\n")
+                    usersToFollow.append(f)
+    finally:
+        file.close()
 
 if __name__ == "__main__":
     main()

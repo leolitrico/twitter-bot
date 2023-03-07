@@ -15,7 +15,7 @@ import sys
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
-from libs.twitter import login, get_followers, get_following
+from libs.twitter import login, get_follow_count
 from libs.browser import get_browser
 
 ##############################################################################################
@@ -27,7 +27,7 @@ FOLLOWER_LIMIT_OPT = "--follower-limit"
 FOLLOWER_LIMIT = 100
 
 RATIO_LIMIT_OPT = "--ratio-limit"
-RATIO_LIMIT = 2
+RATIO_LIMIT = 8
 
 N = 10
 
@@ -49,6 +49,14 @@ def load_followers(filename):
         print("Error: unable to load followed users from file " + filename)
         return None
     return followedUsers
+
+def store_users_to_follow(filename, usersToFollow):
+    try:
+        with open(filename, 'w') as file:
+            for user in usersToFollow:
+                file.write(user + '\n')
+    except:
+        print("unable to store users to follow")
 
 def main():
     ##############################################################################################
@@ -116,38 +124,25 @@ def main():
     #login to bot account
     login(botBrowser, botUsername, botPassword)
 
-    for follower in followers:
-        following_count, follow_count = get_following(botBrowser, follower, numberOfTries=NUMBER_TRIES)
-        ratio = 100
-        if follow_count != 0:
-            ratio = following_count / follow_count
-        if following_count < followerLimit and ratio < ratioLimit:
+    i = -1
+    try: 
+        for i, follower in enumerate(followers):
+            i += 1
+            following_count, follow_count = get_follow_count(botBrowser, follower, numberOfTries=NUMBER_TRIES)
+            ratio = 100
+            if follow_count != 0:
+                ratio = following_count / follow_count
 
-    #get all my followers
-    targetFollowers = get_followers(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
-    targetFollowing = get_following(botBrowser, targetUsername, numberOfTries=NUMBER_TRIES)
-    #init list of new people to follow
-    usersToFollow = []
-
-    #file to store all the users to follow
-    file = None
-    if filename == None:
-        file = sys.stdout
-    else:
-        try: 
-            file = open(filename, "w")
-        except:
-            print("Error: unable to write to file " + filename)
-            return
-
-    #for each of target's followers, get their followers
-    for follower in targetFollowers:
-        theirFollowers = get_followers(botBrowser, follower, limit=1000, numberOfTries=NUMBER_TRIES)
-        for f in theirFollowers:
-            #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip
-            if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers:
-                file.write(f + "\n")
-    file.close()
+            if following_count < followerLimit or ratio > ratioLimit:
+                file.write(follower + "\n")
+                n -= 1
+                if n == 0:
+                    file.close()
+                    store_users_to_follow(followersFilename, followers[i + 1:])
+                    return
+    finally: 
+        store_users_to_follow(followersFilename, followers[i + 1:])
+        file.close()
 
 if __name__ == "__main__":
     main()
