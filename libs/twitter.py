@@ -55,7 +55,7 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 # Wait to load page
-                sleep(1)
+                sleep(0.5)
                 # Calculate new scroll height and compare with last scroll height
                 new_height = browser.execute_script("return document.body.scrollHeight")
                 if new_height == last_height:
@@ -89,7 +89,7 @@ def get_following(browser, name, limit=None, numberOfTries=1):
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 # Wait to load page
-                sleep(1)
+                sleep(0.5)
                 # Calculate new scroll height and compare with last scroll height
                 new_height = browser.execute_script("return document.body.scrollHeight")
                 if new_height == last_height:
