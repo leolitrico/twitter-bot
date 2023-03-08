@@ -132,6 +132,7 @@ def main():
 
     
     #for each of target's followers, get their followers
+    print("Getting followers of followers of " + targetUsername + "...")
     try:
         for follower in targetFollowers:
             theirFollowers = get_followers(botBrowser, follower, limit=10000, numberOfTries=NUMBER_TRIES)
@@ -140,10 +141,17 @@ def main():
                 if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
                     file.write(f + "\n")
                     usersToFollow.append(f)
+        print("successfully got " + str(len(usersToFollow)) + " users")
+    except:
+        print("Error: only able to get " + str(len(usersToFollow)) + " users")
     finally:
         file.close()
 
 
 
+
+
 if __name__ == "__main__":
+    print("#######################################################################################")
     main()
+    print("#######################################################################################")

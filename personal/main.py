@@ -109,7 +109,8 @@ def main():
     except:
         print("error opening were followed file")
         return
-
+    
+    print("following users...")
     try: 
         # follow users
         i = 0
@@ -122,6 +123,8 @@ def main():
                     wereFollowed.write(user + '\n')
                     usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
                     i += 1
+    except:
+        print("error following users")
     finally:
         wereFollowed.close()
 
@@ -130,9 +133,16 @@ def main():
     store_users_followed(followedFilename, usersFollowed)
 
     # unfollow users
-    for user in usersToUnfollow:
-        if user not in following:
-            unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
+    print("unfollowing users...")
+    try:
+        for user in usersToUnfollow:
+            if user not in following:
+                unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
+    except:
+        print("error unfollowing users")
 
 if __name__ == "__main__":
+    print("#######################################################################################")
     main()
+    print("#######################################################################################")
+

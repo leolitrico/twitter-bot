@@ -124,6 +124,7 @@ def main():
     #login to bot account
     login(botBrowser, botUsername, botPassword)
 
+    print("filtering users...")
     i = -1
     try: 
         for follower in followers:
@@ -138,12 +139,10 @@ def main():
                 print(follower)
                 n -= 1
                 if n == 0:
-                    file.close()
-                    if i + 1 < len(followers):
-                        store_users_to_follow(followersFilename, followers[i + 1:])
-                    else:
-                        store_users_to_follow(followersFilename, [])
-                    return
+                    break
+        print("Successfully filtered " + str(i + 1) + " users")
+    except:
+        print("Error: only able to filter " + str(i + 1) + " users")
     finally: 
         if i + 1 < len(followers) and i >= 0:
             store_users_to_follow(followersFilename, followers[i + 1:])
@@ -152,4 +151,7 @@ def main():
         file.close()
 
 if __name__ == "__main__":
+    print("#######################################################################################")
     main()
+    print("#######################################################################################")
+
