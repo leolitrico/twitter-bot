@@ -46,6 +46,7 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                 usernames = browser.find_elements(By.XPATH, "//div[@data-testid='cellInnerDiv']//a[@role='link']//span")
                 for username in usernames:
                     if limit != None and counter >= limit:
+                        print("hey")
                         return follower_list
                     
                     username = username.text
