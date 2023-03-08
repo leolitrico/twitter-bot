@@ -4,7 +4,7 @@ import locale
 
 from selenium.webdriver.common.by import By
 
-RANGE = 3
+RANGE = 5
 
 def random_sleep(min):
     sleep(random.randint(min, min + RANGE))
@@ -14,21 +14,21 @@ def login(browser, username, password, numberOfTries=1):
     for i in range(numberOfTries):
         try:
             browser.get("https://twitter.com/home")
-            random_sleep(4)
+            sleep(3)
 
             if browser.current_url == "https://twitter.com/home":
                 return
             
             browser.get("http://twitter.com/i/flow/login/")
-            random_sleep(4)
+            sleep(3)
             #Enter Your Username Here
             browser.find_element(By.XPATH,"//input[@name='text']").send_keys(username)
             browser.find_element(By.XPATH,"/html/body/div[1]/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]").click()
-            random_sleep(3)
+            sleep(3)
             #Enter Your Password here
             browser.find_element(By.XPATH,"//input[@name='password']").send_keys(password)
             browser.find_element(By.XPATH,"/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div").click()
-            random_sleep(4)
+            sleep(3)
         except:
             continue
 
@@ -37,7 +37,7 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
         try:
             follower_list = []
             browser.get("https://twitter.com/" + name + "/followers")
-            random_sleep(4)
+            sleep(3)
             # Code to goto End of the Page
             last_height = browser.execute_script("return document.body.scrollHeight")
             counter = 0
@@ -49,20 +49,23 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                         return follower_list
                     
                     username = username.text
-                    if username not in follower_list and len(username) > 0 and username[0] == '@':
-                        follower_list.append(username[1:])
-                        counter += 1
+                    if len(username) > 0 and username[0] == '@': 
+                        username = str(username[1:])
+                        if username not in follower_list:
+                            follower_list.append(username)
+                            counter += 1
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 # Wait to load page
-                sleep(0.5)
+                sleep(1.5)
                 # Calculate new scroll height and compare with last scroll height
                 new_height = browser.execute_script("return document.body.scrollHeight")
                 if new_height == last_height:
                     break
                 last_height = new_height
             return follower_list
-        except:
+        except Exception as e:
+            print(e)
             continue
     return []
 
@@ -71,7 +74,7 @@ def get_following(browser, name, limit=None, numberOfTries=1):
         try:
             follower_list = []
             browser.get("https://twitter.com/" + name + "/following")
-            random_sleep(4)
+            sleep(3)
             # Code to goto End of the Page
             last_height = browser.execute_script("return document.body.scrollHeight")
             counter = 0
@@ -83,20 +86,23 @@ def get_following(browser, name, limit=None, numberOfTries=1):
                         return follower_list
                     
                     username = username.text
-                    if username not in follower_list and len(username) > 0 and username[0] == '@':
-                        follower_list.append(username[1:])
-                        counter += 1
+                    if len(username) > 0 and username[0] == '@': 
+                        username = str(username[1:])
+                        if username not in follower_list:
+                            follower_list.append(username)
+                            counter += 1
                 # Scroll down to bottom
                 browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 # Wait to load page
-                sleep(0.5)
+                sleep(1.5)
                 # Calculate new scroll height and compare with last scroll height
                 new_height = browser.execute_script("return document.body.scrollHeight")
                 if new_height == last_height:
                     break
                 last_height = new_height
             return follower_list
-        except:
+        except Exception as e:
+            print(e)
             continue
     return []
 
@@ -105,7 +111,7 @@ def get_follow_count(browser, name, numberOfTries=1):
     for i in range(numberOfTries):
         try:
             browser.get("https://twitter.com/" + name)
-            random_sleep(4)
+            sleep(3)
             #get follower count element
             follower_count = browser.find_element(By.XPATH, "/html/body/div[1]/div/div/div[2]/main/div/div/div/div/div/div[3]/div/div/div/div/div[5]/div[2]/a/span[1]/span")
             #get following count element

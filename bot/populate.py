@@ -138,7 +138,7 @@ def main():
             theirFollowers = get_followers(botBrowser, follower, limit=10000, numberOfTries=NUMBER_TRIES)
             for f in theirFollowers:
                 #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip
-                if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and not f in targetFollowers and not f in wereFollowedUsers:
+                if not f in targetFollowing and f != targetUsername and f != botUsername and f not in usersToFollow and f not in targetFollowers and f not in wereFollowedUsers:
                     file.write(f + "\n")
                     usersToFollow.append(f)
         print("successfully got " + str(len(usersToFollow)) + " users")
