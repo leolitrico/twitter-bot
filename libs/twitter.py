@@ -3,6 +3,7 @@ import random
 import locale
 
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import NoSuchElementException
 
 RANGE = 5
 
@@ -29,7 +30,7 @@ def login(browser, username, password, numberOfTries=1):
             browser.find_element(By.XPATH,"//input[@name='password']").send_keys(password)
             browser.find_element(By.XPATH,"/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div").click()
             sleep(3)
-        except:
+        except NoSuchElementException:
             continue
 
 def get_followers(browser, name, limit=None, numberOfTries=1):
@@ -46,7 +47,6 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                 usernames = browser.find_elements(By.XPATH, "//div[@data-testid='cellInnerDiv']//a[@role='link']//span")
                 for username in usernames:
                     if limit != None and counter >= limit:
-                        print("hey")
                         return follower_list
                     
                     username = username.text
@@ -65,8 +65,7 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                     break
                 last_height = new_height
             return follower_list
-        except Exception as e:
-            print(e)
+        except NoSuchElementException: 
             continue
     return []
 
@@ -101,8 +100,7 @@ def get_following(browser, name, limit=None, numberOfTries=1):
                     break
                 last_height = new_height
             return follower_list
-        except Exception as e:
-            print(e)
+        except NoSuchElementException: 
             continue
     return []
 
@@ -120,9 +118,9 @@ def get_follow_count(browser, name, numberOfTries=1):
             locale.setlocale( locale.LC_ALL, 'en_US.UTF-8' ) 
             try:
                 return locale.atoi(following_count.text), locale.atoi(follower_count.text)
-            except:
+            except locale.Error:
                 return 100, 10000
-        except:
+        except NoSuchElementException:
             continue
     return 100, 10000
 
@@ -141,7 +139,7 @@ def follow(browser, name, numberOfTries=1):
             follow_button.click()
             sleep(1)
             return True
-        except:
+        except NoSuchElementException:
             continue
     return False
 
@@ -159,6 +157,6 @@ def unfollow(browser, name, numberOfTries=1):
             follow_button.click()
             sleep(1)
             return True
-        except:
+        except NoSuchElementException:
             continue
     return False

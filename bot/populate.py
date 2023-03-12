@@ -135,7 +135,11 @@ def main():
     print("Getting followers of followers of " + targetUsername + "...")
     try:
         for follower in targetFollowers:
-            theirFollowers = get_followers(botBrowser, follower, limit=10000, numberOfTries=NUMBER_TRIES)
+            try:
+                theirFollowers = get_followers(botBrowser, follower, limit=2000, numberOfTries=NUMBER_TRIES)
+            except:
+                botBrowser = get_browser(profile_path, botProfile)
+                login(botBrowser, botUsername, botPassword)
             print("got " + str(len(theirFollowers)) + " followers of " + follower)
             for f in theirFollowers:
                 #if: they are me, or they are the bot, or they are already in my list, or they are already in my followers, skip

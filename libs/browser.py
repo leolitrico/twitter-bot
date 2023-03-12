@@ -7,7 +7,7 @@ BINARY_PATH = '/usr/bin/google-chrome'
 def get_browser(profile_path=None, profile_name=None):
     options = webdriver.ChromeOptions()
     options.binary_location = BINARY_PATH
-    options.add_argument('--headless=new')
+    #options.add_argument('--headless=new')
     options.add_argument('--disable-dev-shm-usage') 
 
     #add chrome profile to persist cookies

@@ -23,6 +23,7 @@ from libs.browser import get_browser
 ##############################################################################################
 NUMBER_TRIES = 5
 DATE_FORMAT = "%Y-%m-%d"
+PROFILE_OPT = "--profile"
 
 ##############################################################################################
 # functions
@@ -84,13 +85,20 @@ def main():
     followFilename = argv[3]
     followedFilename = argv[4]
     wereFollowedFilename = argv[5]
+    profile_path = None
+    profile = None
+
+    if PROFILE_OPT in argv:
+            i = argv.index(PROFILE_OPT)
+            profile_path = argv[i + 1]
+            profile = argv[i + 2]
 
     ##############################################################################################
     # main
     ##############################################################################################
 
     # login
-    browser = get_browser()
+    browser = get_browser(profile_path, profile)
     login(browser, username, password)
 
     # get following
@@ -111,10 +119,10 @@ def main():
         return
     
     print("following users...")
+    i = 0
     try: 
         # follow users
-        i = 0
-        for user in usersToFollow:
+        for user in enumerate(usersToFollow):
             if i >= followNumber:
                 break
 
@@ -129,7 +137,11 @@ def main():
         wereFollowed.close()
 
     # store users to follow
-    store_users_to_follow(followFilename, usersToFollow[i:])
+    if i < len(usersToFollow):
+        store_users_to_follow(followFilename, usersToFollow[i:])
+    else:
+        store_users_to_follow(followFilename, [])
+        
     store_users_followed(followedFilename, usersFollowed)
 
     # unfollow users
@@ -137,7 +149,11 @@ def main():
     try:
         for user in usersToUnfollow:
             if user not in following:
-                unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
+                try:
+                    unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
+                except:
+                    browser = get_browser(profile_path, profile)
+                    login(browser, username, password)
     except:
         print("error unfollowing users")
 
