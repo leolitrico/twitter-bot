@@ -24,6 +24,7 @@ from libs.browser import get_browser
 NUMBER_TRIES = 5
 DATE_FORMAT = "%Y-%m-%d"
 PROFILE_OPT = "--profile"
+VERIFY_OPT = "--verify"
 
 ##############################################################################################
 # functions
@@ -87,22 +88,28 @@ def main():
     wereFollowedFilename = argv[5]
     profile_path = None
     profile = None
+    verifier = None
 
     if PROFILE_OPT in argv:
-            i = argv.index(PROFILE_OPT)
-            profile_path = argv[i + 1]
-            profile = argv[i + 2]
+        i = argv.index(PROFILE_OPT)
+        profile_path = argv[i + 1]
+        profile = argv[i + 2]
+
+    if VERIFY_OPT in argv:
+        i = argv.index(VERIFY_OPT)
+        verifier = argv[i + 1]
+
 
     ##############################################################################################
     # main
     ##############################################################################################
 
     # login
-    browser = get_browser(profile_path, profile)
+    browser = get_browser(profile_path, profile, verifier=verifier)
     login(browser, username, password)
 
     # get following
-    following = get_following(browser, username)
+    success, following = get_following(browser, username)
 
     #get users to follow
     usersToFollow = get_users_to_follow(followFilename)
@@ -127,10 +134,14 @@ def main():
                 break
 
             if user not in following:
-                if(follow(browser, user, numberOfTries=NUMBER_TRIES)):
-                    wereFollowed.write(user + '\n')
-                    usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
-                    i += 1
+                try:
+                    if(follow(browser, user, numberOfTries=NUMBER_TRIES)):
+                        wereFollowed.write(user + '\n')
+                        usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
+                        i += 1
+                except:
+                    browser = get_browser(profile_path, profile, verifier=verifier)
+                    login(browser, username, password)
     except:
         print("error following users")
     finally:
@@ -152,7 +163,7 @@ def main():
                 try:
                     unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
                 except:
-                    browser = get_browser(profile_path, profile)
+                    browser = get_browser(profile_path, profile, verifier=verifier)
                     login(browser, username, password)
     except:
         print("error unfollowing users")

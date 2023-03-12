@@ -11,7 +11,7 @@ def random_sleep(min):
     sleep(random.randint(min, min + RANGE))
 
 
-def login(browser, username, password, numberOfTries=1):
+def login(browser, username, password, verifier=None, numberOfTries=1):
     for i in range(numberOfTries):
         try:
             browser.get("https://twitter.com/home")
@@ -30,6 +30,11 @@ def login(browser, username, password, numberOfTries=1):
             browser.find_element(By.XPATH,"//input[@name='password']").send_keys(password)
             browser.find_element(By.XPATH,"/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div").click()
             sleep(3)
+            #Enter Verification
+            if verifier != None:
+                browser.find_element(By.XPATH,"//input[@name='text']").send_keys(verifier)
+                browser.find_element(By.XPATH,"//div[@role='button' and @test-id='ofcEnterTextNextButton']").click()
+                sleep(3)
         except NoSuchElementException:
             continue
 
@@ -64,10 +69,12 @@ def get_followers(browser, name, limit=None, numberOfTries=1):
                 if new_height == last_height:
                     break
                 last_height = new_height
-            return follower_list
+            return True, follower_list
         except NoSuchElementException: 
             continue
-    return []
+        except:
+            return False, follower_list
+    return True, []
 
 def get_following(browser, name, limit=None, numberOfTries=1):
     for i in range(numberOfTries):
@@ -99,10 +106,12 @@ def get_following(browser, name, limit=None, numberOfTries=1):
                 if new_height == last_height:
                     break
                 last_height = new_height
-            return follower_list
+            return True, follower_list
         except NoSuchElementException: 
             continue
-    return []
+        except:
+            return False, follower_list
+    return True, []
 
 #returns (following, followers)
 def get_follow_count(browser, name, numberOfTries=1):
