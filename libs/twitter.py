@@ -31,7 +31,7 @@ def login(browser, username, password, verifier=None, numberOfTries=1):
             browser.find_element(By.XPATH,"/html/body/div/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div").click()
             sleep(3)
             #Enter Verification
-            if verifier != None:
+            if verifier != None and browser.current_url != "https://twitter.com/home":
                 browser.find_element(By.XPATH,"//input[@name='text']").send_keys(verifier)
                 browser.find_element(By.XPATH,"//div[@role='button' and @test-id='ofcEnterTextNextButton']").click()
                 sleep(3)

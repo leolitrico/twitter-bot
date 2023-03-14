@@ -14,6 +14,7 @@
 
 import sys
 import pathlib
+from time import sleep
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
 from libs.twitter import login, get_followers, get_following
@@ -137,6 +138,7 @@ def main():
         for follower in targetFollowers:
             success, theirFollowers = get_followers(botBrowser, follower, limit=2000, numberOfTries=NUMBER_TRIES)
             if not success:
+                sleep(100)
                 botBrowser = get_browser(profile_path, botProfile)
                 login(botBrowser, botUsername, botPassword)
 

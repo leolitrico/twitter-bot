@@ -12,6 +12,7 @@
 
 
 import sys
+from time import sleep
 import pathlib
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
@@ -132,6 +133,7 @@ def main():
             try:
                 following_count, follow_count = get_follow_count(botBrowser, follower, numberOfTries=NUMBER_TRIES)
             except:
+                sleep(100)
                 botBrowser = get_browser(profile_path, botProfile)
                 login(botBrowser, botUsername, botPassword)
                 

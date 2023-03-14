@@ -13,6 +13,7 @@
 import sys
 import pathlib
 import datetime
+from time import sleep
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()) + "/../")
 
 from libs.twitter import login, get_following, follow, unfollow
@@ -163,6 +164,7 @@ def main():
                 try:
                     unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
                 except:
+                    sleep(100)
                     browser = get_browser(profile_path, profile, verifier=verifier)
                     login(browser, username, password)
     except:
