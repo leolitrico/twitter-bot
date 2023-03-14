@@ -106,8 +106,8 @@ def main():
     ##############################################################################################
 
     # login
-    browser = get_browser(profile_path, profile, verifier=verifier)
-    login(browser, username, password)
+    browser = get_browser(profile_path, profile)
+    login(browser, username, password, verifier=verifier)
 
     # get following
     success, following = get_following(browser, username)
@@ -141,8 +141,8 @@ def main():
                         usersFollowed.append((user, datetime.datetime.now().strftime(DATE_FORMAT)))
                         i += 1
                 except:
-                    browser = get_browser(profile_path, profile, verifier=verifier)
-                    login(browser, username, password)
+                    browser = get_browser(profile_path, profile)
+                    login(browser, username, password, verifier=verifier)
     except:
         print("error following users")
     finally:
@@ -165,8 +165,8 @@ def main():
                     unfollow(browser, user[0], numberOfTries=NUMBER_TRIES)
                 except:
                     sleep(100)
-                    browser = get_browser(profile_path, profile, verifier=verifier)
-                    login(browser, username, password)
+                    browser = get_browser(profile_path, profile)
+                    login(browser, username, password, verifier=verifier)
     except:
         print("error unfollowing users")
 
