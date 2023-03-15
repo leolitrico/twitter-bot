@@ -140,7 +140,7 @@ def main():
             
             if following_count == None or follow_count == None:
                 continue
-            
+
             ratio = 100
             if follow_count != 0:
                 ratio = following_count / follow_count
@@ -152,8 +152,8 @@ def main():
                 if n == 0:
                     break
         print("Successfully filtered " + str(i + 1) + " users")
-    except:
-        print("Error: only able to filter " + str(i + 1) + " users")
+    except Exception as e:
+        print("Error: only able to filter " + str(i + 1) + " users, " + e)
     finally: 
         if i + 1 < len(followers) and i >= 0:
             store_users_to_follow(followersFilename, followers[i + 1:])
