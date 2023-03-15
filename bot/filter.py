@@ -115,7 +115,7 @@ def main():
         file = sys.stdout
     else:
         try: 
-            file = open(filename, "w")
+            file = open(filename, "a")
         except:
             print("Error: unable to write to file " + filename)
             return
