@@ -130,13 +130,17 @@ def main():
     try: 
         for follower in followers:
             i += 1
+            follow_count, following_count = None, None
             try:
                 following_count, follow_count = get_follow_count(botBrowser, follower, numberOfTries=NUMBER_TRIES)
             except:
                 sleep(100)
                 botBrowser = get_browser(profile_path, botProfile)
                 login(botBrowser, botUsername, botPassword)
-                
+            
+            if following_count == None or follow_count == None:
+                continue
+            
             ratio = 100
             if follow_count != 0:
                 ratio = following_count / follow_count
